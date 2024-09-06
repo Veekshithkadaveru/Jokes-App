@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -29,7 +30,12 @@ fun ErrorMessage(error: String) {
         color = MaterialTheme.colorScheme.error
     )
 }
-
+@Composable
+fun DismissButton(onClick: () -> Unit) {
+    OutlinedButton(onClick = onClick){
+        Text(text = "Dismiss")
+    }
+}
 
 fun toastMsg(context: Context, msg: String) {
     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
