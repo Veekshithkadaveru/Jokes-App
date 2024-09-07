@@ -22,7 +22,7 @@ fun AppNavigation(viewModel: JokesViewmodel, navController: NavHostController, m
             BookmarksScreen(viewModel = viewModel, modifier = Modifier.fillMaxSize())
         }
         composable(route = TopLevelDestinations.Delete.route) {
-            DeleteScreen(viewModel = viewModel, modifier = Modifier.fillMaxSize())
+            DeleteScreen(viewmodel = viewModel, modifier = Modifier.fillMaxSize())
         }
     }
 }

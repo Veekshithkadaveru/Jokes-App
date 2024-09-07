@@ -9,8 +9,13 @@ import javax.inject.Inject
 class JokesRepoImpl @Inject constructor(
     private val apiService: ApiService,
     private val jokesDao: JokesDao
-) {
-    suspend fun fetchUnbookmarkedJokes(
+) :JokesRepo{
+    override fun fetchBookMarkedJokes(): Flow<List<JokesEntity>> {
+
+        return jokesDao.fetchBookmarkedJokes()
+    }
+
+    override suspend fun fetchUnBookMarkedJokes(
         genre: String,
         amount: Int
     ): Flow<List<JokesEntity>> {
@@ -34,19 +39,15 @@ class JokesRepoImpl @Inject constructor(
         return jokesDao.fetchUnbookmarkedJokes()
     }
 
-    suspend fun updateBookMarkStatus(id: Int, bookmarked: Boolean) {
+    override suspend fun updateBookmarkStatus(id: Int, bookmarked: Boolean) {
         jokesDao.updateBookmarkStatus(jokeId = id, isBookmarked = bookmarked)
     }
 
-    fun fetchBookmarkedJokes(): Flow<List<JokesEntity>> {
-        return jokesDao.fetchBookmarkedJokes()
-    }
-
-    suspend fun deleteUnbookmarkedJokes() {
+    override suspend fun deleteUnbookmarkedJokes() {
         jokesDao.deleteUnbookmarkedJokes()
     }
 
-    suspend fun deleteJokeViaId(id: Int) {
+    override suspend fun deleteJokeViaId(id: Int) {
         jokesDao.deleteJokeViaId(id)
     }
 }

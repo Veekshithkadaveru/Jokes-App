@@ -14,7 +14,7 @@ android {
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -71,7 +71,9 @@ dependencies {
 
 //    dagger-hilt
     implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
+    ksp("androidx.hilt:hilt-compiler:1.2.0")
+    ksp("com.google.dagger:hilt-compiler:2.51.1")
+
 
 //    networking
     implementation (libs.retrofit)
@@ -86,7 +88,7 @@ dependencies {
 
 //    room
     implementation(libs.room.runtime)
-    ksp(libs.androidx.room.compiler)
+    ksp("androidx.room:room-compiler:2.6.1")
     implementation(libs.androidx.room.ktx)
 
 }
