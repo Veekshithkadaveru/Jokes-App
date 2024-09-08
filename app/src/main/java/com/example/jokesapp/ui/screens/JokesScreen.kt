@@ -44,6 +44,7 @@ import com.example.jokesapp.R
 import com.example.jokesapp.data.local.JokesEntity
 import com.example.jokesapp.ui.viewmodel.JokesViewmodel
 import com.example.jokesapp.util.CustomRowWith2Values
+import com.example.jokesapp.util.DotsCollision
 import com.example.jokesapp.util.ErrorMessage
 import com.example.jokesapp.util.LoadIndicator
 import com.example.jokesapp.util.addSoundEffect
@@ -63,7 +64,7 @@ fun JokesScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                LoadIndicator()
+                DotsCollision()
             }
         }
 
