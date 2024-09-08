@@ -103,7 +103,7 @@ fun BookmarksScreen(modifier: Modifier, viewModel: JokesViewmodel = hiltViewMode
                     ErrorMessage(error = "You don't have any Bookmarks")
                 }
             } else {
-                LazyColumn(modifier = modifier) {
+                LazyColumn(modifier = modifier.padding(top = 96.dp, bottom = 86.dp)) {
                     items(successState.jokesList, key = { joke ->
                         joke.id
                     }) { joke ->

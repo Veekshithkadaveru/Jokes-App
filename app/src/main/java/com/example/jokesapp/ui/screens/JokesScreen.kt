@@ -92,7 +92,7 @@ fun JokesScreen(
                     )
                 }
             } else {
-                LazyColumn(modifier = Modifier) {
+                LazyColumn(modifier = Modifier.padding(top = 96.dp, bottom = 86.dp)) {
                     items(successState.jokesList, key = { joke ->
                         joke.id
                     }) { joke ->
@@ -140,6 +140,7 @@ fun JokeItem(
     val view: View = LocalView.current
     Card(modifier = Modifier
         .padding(16.dp)
+
         .fillMaxWidth()
         .clickable {
             addSoundEffect(view)
