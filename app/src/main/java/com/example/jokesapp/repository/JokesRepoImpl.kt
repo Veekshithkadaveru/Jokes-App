@@ -32,9 +32,12 @@ class JokesRepoImpl @Inject constructor(
                         jokeMessage = joke.joke
                     )
                 }
-                jokesDao.insertJokesList(jokesEntityList)
+                if (jokesEntityList.isNotEmpty()) { // Ensure the list is not empty
+                    jokesDao.insertJokesList(jokesEntityList)
+                }
             }
         } catch (e: Exception) {
+            // Handle the exception gracefully
         }
         return jokesDao.fetchUnbookmarkedJokes()
     }

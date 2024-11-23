@@ -91,4 +91,7 @@ dependencies {
     ksp("androidx.room:room-compiler:2.6.1")
     implementation(libs.androidx.room.ktx)
 
+    testImplementation ("io.mockk:mockk:1.13.5")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+
 }
