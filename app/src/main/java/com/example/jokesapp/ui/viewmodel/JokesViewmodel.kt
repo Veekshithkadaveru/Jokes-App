@@ -23,7 +23,7 @@ class JokesViewmodel @Inject constructor(private val jokesRepo: JokesRepo) : Vie
         fetchUnbookMarkedJokes()
     }
 
-    private fun fetchUnbookMarkedJokes(genre: String = "Any", amount: Int = 10) {
+    private fun fetchUnbookMarkedJokes(genre: String = "Any", amount: Int = 25) {
         viewModelScope.launch {
             _homeUIState.value = UIstate.Loading
             try {

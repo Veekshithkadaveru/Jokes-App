@@ -4,12 +4,13 @@ import com.example.jokesapp.data.local.JokesDao
 import com.example.jokesapp.data.local.JokesEntity
 import com.example.jokesapp.data.remote.ApiService
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class JokesRepoImpl @Inject constructor(
     private val apiService: ApiService,
     private val jokesDao: JokesDao
-) :JokesRepo{
+) : JokesRepo {
     override fun fetchBookMarkedJokes(): Flow<List<JokesEntity>> {
 
         return jokesDao.fetchBookmarkedJokes()
@@ -19,27 +20,34 @@ class JokesRepoImpl @Inject constructor(
         genre: String,
         amount: Int
     ): Flow<List<JokesEntity>> {
-        try {
-            val response = apiService.fetchAllJokes(genre = genre, amount = amount)
-            val jokesResponse = response.body()
-            if (response.isSuccessful && jokesResponse != null) {
-                val jokesEntityList = jokesResponse.jokes.map { joke ->
-                    JokesEntity(
-                        id = joke.id,
-                        type = joke.type,
-                        setup = joke.setup,
-                        punchLine = joke.delivery,
-                        jokeMessage = joke.joke
-                    )
-                }
-                if (jokesEntityList.isNotEmpty()) { // Ensure the list is not empty
+
+        val cachedJokes = jokesDao.fetchUnbookmarkedJokes().firstOrNull()
+        return if (cachedJokes.isNullOrEmpty()) {
+
+            try {
+
+                val response = apiService.fetchAllJokes(genre = genre, amount = amount)
+                val jokesResponse = response.body()
+
+                if (response.isSuccessful && jokesResponse != null) {
+                    val jokesEntityList = jokesResponse.jokes.map { joke ->
+                        JokesEntity(
+                            id = joke.id,
+                            type = joke.type,
+                            setup = joke.setup,
+                            punchLine = joke.delivery,
+                            jokeMessage = joke.joke
+                        )
+                    }
                     jokesDao.insertJokesList(jokesEntityList)
                 }
+            } catch (e: Exception) {
+                throw Exception("Failed to fetch jokes from API, You can now only view Bookmarked Jokes")
             }
-        } catch (e: Exception) {
-            // Handle the exception gracefully
+            return jokesDao.fetchUnbookmarkedJokes()
+        } else {
+            jokesDao.fetchUnbookmarkedJokes()
         }
-        return jokesDao.fetchUnbookmarkedJokes()
     }
 
     override suspend fun updateBookmarkStatus(id: Int, bookmarked: Boolean) {
@@ -53,4 +61,5 @@ class JokesRepoImpl @Inject constructor(
     override suspend fun deleteJokeViaId(id: Int) {
         jokesDao.deleteJokeViaId(id)
     }
+
 }
