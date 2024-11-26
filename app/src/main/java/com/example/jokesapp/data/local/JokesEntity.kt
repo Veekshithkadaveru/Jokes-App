@@ -11,5 +11,5 @@ data class JokesEntity(
     val setup: String?,
     val punchLine: String?,
     val jokeMessage: String?,
-    val isBookMarked: Boolean = false
+    var isBookMarked: Boolean = false
 )
