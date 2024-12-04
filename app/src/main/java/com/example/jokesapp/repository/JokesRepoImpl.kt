@@ -6,6 +6,8 @@ import com.example.jokesapp.data.remote.ApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onStart
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 class JokesRepoImpl @Inject constructor(
@@ -28,27 +30,40 @@ class JokesRepoImpl @Inject constructor(
             if (cachedJokes.isNullOrEmpty()) {
                 try {
                     val response = apiService.fetchAllJokes(genre = genre, amount = amount)
-                    val jokesResponse = response.body()
 
-                    if (response.isSuccessful && jokesResponse != null) {
-                        val jokesEntityList = jokesResponse.jokes.map { joke ->
-                            JokesEntity(
-                                id = joke.id,
-                                type = joke.type,
-                                setup = joke.setup,
-                                punchLine = joke.delivery,
-                                jokeMessage = joke.joke
-                            )
+                    if (response.isSuccessful) {
+                        val jokesResponse = response.body()
+                        if (jokesResponse != null) {
+                            val jokesEntityList = jokesResponse.jokes.map { joke ->
+                                JokesEntity(
+                                    id = joke.id,
+                                    type = joke.type,
+                                    setup = joke.setup,
+                                    punchLine = joke.delivery,
+                                    jokeMessage = joke.joke
+                                )
+                            }
+                            jokesDao.insertJokesList(jokesEntityList)
+                        } else {
+                            throw IllegalStateException("Response body is null despite successful response")
                         }
-                        jokesDao.insertJokesList(jokesEntityList)
+                    } else {
+
+                        throw HttpException(response)
                     }
+                } catch (e: HttpException) {
+                    println("HTTP Error: ${e.message()}, Code: ${e.code()}")
+                    throw e
+                } catch (e: IOException) {
+                    println("Network Error: ${e.localizedMessage}")
+                    throw IOException("Network issue or server unreachable: ${e.localizedMessage}")
                 } catch (e: Exception) {
-                    throw Exception("Failed to fetch jokes from API, You can now only view Bookmarked Jokes")
+                    println("Unknown Error: ${e.localizedMessage}")
+                    throw Exception("An unexpected error occurred: ${e.localizedMessage}")
                 }
             }
         }
     }
-
 
     override suspend fun updateBookmarkStatus(id: Int, bookmarked: Boolean) {
         jokesDao.updateBookmarkStatus(jokeId = id, isBookmarked = bookmarked)
